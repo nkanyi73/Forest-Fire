@@ -35,11 +35,10 @@ public class ForestFire3D : MonoBehaviour
     /*
      * Declaration of my variables
      */
-    public Transform nozzle;
-    public InputActionReference shootAction;
-    public ParticleSystem waterJet;
     public int closestXtoDog, closestYtoDog; // used to get the closest cell to the dog
     public int closestXtoPlayer, closestYtoPlayer; // used to get the closest cell to the player
+
+    public Transform nozzle;
     /*
      
      */
@@ -125,15 +124,7 @@ public class ForestFire3D : MonoBehaviour
         FindClosestCellToDog();
         FindClosestCellToPlayer();
         
-        if (shootAction.action.IsPressed())
-        {
-            StartShooting();
-        }
-        else
-        {
-            StopShooting();
-             
-        }
+        
 
 
     }
@@ -385,13 +376,7 @@ public class ForestFire3D : MonoBehaviour
         }
     }
 
-    private void StartShooting()
-    {
-        waterJet.Play();
-        
-    }
 
-    private void StopShooting() { waterJet.Stop(); }
 
     private void FindClosestCellToDog()
     {
@@ -435,5 +420,6 @@ public class ForestFire3D : MonoBehaviour
 
         }
     }
+
 
 }

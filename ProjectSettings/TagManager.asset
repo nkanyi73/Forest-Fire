@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ignite
+  - Water
+  - Cell
   layers:
   - Default
   - TransparentFX
@@ -12,13 +14,13 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Cell
   - 
   - Grabbable
   - Hands
   - Teleporter
   - NoHandCollide
-  - 
+  - Fire
   - 
   - 
   - 
