@@ -186,7 +186,6 @@ public class ForestFire3D : MonoBehaviour
 
         // set the middle cell as grass which is where the player is placed
         forestFireCells[20, 20].SetGrass();
-        forestFireCells[20, 21].SetAlight();
 
         dogX = UnityEngine.Random.Range(0, gridSizeX);
         dogY = UnityEngine.Random.Range(0, gridSizeY);

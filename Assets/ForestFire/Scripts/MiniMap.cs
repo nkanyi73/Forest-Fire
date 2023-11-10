@@ -11,7 +11,6 @@ public class MiniMap : MonoBehaviour
 
     public GameObject cellSprite; // sprite used to represent a cell on the grid
     public Sprite dogSprite;
-    public Sprite playerSprite;
 
     public Transform spawnPosition; // initial spawn position
     public SpriteRenderer[,] cellSpriteRenderers = new SpriteRenderer[0, 0]; // an array to hold references to the sprite renderer component attached to each gameobject
