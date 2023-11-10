@@ -171,10 +171,4 @@ public class ForestFireCell : MonoBehaviour
         cellState = State.Burnt;
         groundMeshRenderer.material = groundMaterialBurnt;
     }
-
-    //void OnParticleCollision()
-    //{
-    //    Debug.Log("Running");
-    //    //Debug.Log("Collid with" + other.name);
-    //}
 }

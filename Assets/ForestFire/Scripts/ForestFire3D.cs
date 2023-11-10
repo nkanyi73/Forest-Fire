@@ -41,6 +41,8 @@ public class ForestFire3D : MonoBehaviour
     private Dog dogInstance;
 
     public GameObject pauseCanvas;
+    public InputActionReference pauseGame;
+    int levelValue = MainMenu.difficultyLevel;
     /*
      
      */
@@ -87,7 +89,7 @@ public class ForestFire3D : MonoBehaviour
     private void Update()
     {
         // check if the spacebar key has been pressed. this key will toggle between whether the game is currently running or paused
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (pauseGame.action.WasPressedThisFrame())
         {
             // if the gameRunning is true, pause the game
             if (gameRunning)
@@ -97,6 +99,7 @@ public class ForestFire3D : MonoBehaviour
             else // if the gameRunning is false, unpause the game
             {
                 PauseGame(false);
+                dogInstance.Bark();
             }
         }
 
@@ -135,8 +138,15 @@ public class ForestFire3D : MonoBehaviour
 
     private void RandomiseGrid()
     {
-        nlight = 2; // how many trees to set on fire
-                    // iterate through every cell in the cell in the grid and set its state to dead, decide what type of object is present and if flammable assign an amount of fuel
+        if (levelValue == 1)
+        {
+            nlight = 4; // how many trees to set on fire
+        } else
+        {
+            nlight = 2;
+        }
+        
+         // iterate through every cell in the cell in the grid and set its state to dead, decide what type of object is present and if flammable assign an amount of fuel
 
         for (int xCount = 0; xCount < gridSizeX; xCount++)
         {
@@ -176,11 +186,11 @@ public class ForestFire3D : MonoBehaviour
 
         // set the middle cell as grass which is where the player is placed
         forestFireCells[20, 20].SetGrass();
+        forestFireCells[20, 21].SetAlight();
 
         dogX = UnityEngine.Random.Range(0, gridSizeX);
         dogY = UnityEngine.Random.Range(0, gridSizeY);
-
-
+        forestFireCells[dogX, dogY].SetGrass();
         dogInstance = Instantiate(dogPrefab, null);
 
         dogInstance.transform.position = cellGameObjects[dogX, dogY].transform.position;

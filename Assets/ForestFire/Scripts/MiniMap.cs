@@ -10,6 +10,8 @@ public class MiniMap : MonoBehaviour
     public ForestFire3D forestFire3D; // reference to the main forest fire 3D script
 
     public GameObject cellSprite; // sprite used to represent a cell on the grid
+    public Sprite dogSprite;
+    public Sprite playerSprite;
 
     public Transform spawnPosition; // initial spawn position
     public SpriteRenderer[,] cellSpriteRenderers = new SpriteRenderer[0, 0]; // an array to hold references to the sprite renderer component attached to each gameobject
@@ -87,7 +89,7 @@ public class MiniMap : MonoBehaviour
         }
 
 
-        cellSpriteRenderers[forestFire3D.closestXtoDog, forestFire3D.closestYtoDog].color = Color.white;
+        cellSpriteRenderers[forestFire3D.closestXtoDog, forestFire3D.closestYtoDog].sprite = dogSprite;
         cellSpriteRenderers[forestFire3D.closestXtoPlayer, forestFire3D.closestYtoPlayer].color = Color.blue;
 
 

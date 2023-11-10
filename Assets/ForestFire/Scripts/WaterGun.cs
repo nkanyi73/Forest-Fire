@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class WaterGun : MonoBehaviour
 {
-    public Transform nozzle;
+    //public Transform nozzle;
     public InputActionReference shootAction;
     public ParticleSystem waterJet;
     // Start is called before the first frame update
