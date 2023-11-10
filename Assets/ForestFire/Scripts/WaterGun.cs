@@ -37,7 +37,6 @@ public class WaterGun : MonoBehaviour
         //}
         waterJet.Play();
 
-
     }
 
     private void StopShooting() 

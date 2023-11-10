@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/ForestFire/Scenes/MainMenu.unity
+    guid: f6d42dfeea4b428458accccc2596da60
+  - enabled: 1
     path: Assets/ForestFire/Scenes/ForestFire3D.unity
     guid: bdfaffa30ba9dc844afffb78261241c8
   m_configObjects:

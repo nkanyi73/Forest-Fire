@@ -7,6 +7,7 @@ TagManager:
   - Ignite
   - Water
   - Cell
+  - Dog
   layers:
   - Default
   - TransparentFX

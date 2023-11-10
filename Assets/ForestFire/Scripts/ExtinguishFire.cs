@@ -5,12 +5,25 @@ using UnityEngine;
 public class ExtinguishFire : MonoBehaviour
 {
     public ForestFireCell forestFireCell;
+    int particleCounter;
+
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log("Collision");
-        forestFireCell = GetComponentInParent<ForestFireCell>();
-        forestFireCell.cellFuel = 0;
-        forestFireCell.SetBurnt();
+       
+        if (particleCounter < 10)
+        {
+            particleCounter++;
+            //Debug.Log(particleCounter.ToString());
+        }
+        else
+        {
+            forestFireCell = GetComponentInParent<ForestFireCell>();
+            Debug.Log(forestFireCell.cellState);
+            forestFireCell.cellFuel = 0;
+            forestFireCell.SetBurnt();
+            particleCounter = 0;
+        }
+        
     }
 
 }

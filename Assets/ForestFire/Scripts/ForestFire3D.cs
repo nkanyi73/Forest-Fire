@@ -23,8 +23,7 @@ public class ForestFire3D : MonoBehaviour
 
     public GameObject cellPrefab; // gameobject prefab used to represent a cell on the grid
 
-    public Dog dogPrefab; // initialize Dog game object
-    private Dog dogInstance;
+    
 
     public ForestFireCell[,] forestFireCells = new ForestFireCell[0, 0]; // array of ForestFireCell objects
     public ForestFireCell.State[,] forestFireCellsNextGenStates = new ForestFireCell.State[0, 0]; // array of cell states to be used in the next generation of the game 
@@ -37,8 +36,11 @@ public class ForestFire3D : MonoBehaviour
      */
     public int closestXtoDog, closestYtoDog; // used to get the closest cell to the dog
     public int closestXtoPlayer, closestYtoPlayer; // used to get the closest cell to the player
-
     public Transform nozzle;
+    public Dog dogPrefab; // initialize Dog game object
+    private Dog dogInstance;
+
+    public GameObject pauseCanvas;
     /*
      
      */
@@ -72,10 +74,12 @@ public class ForestFire3D : MonoBehaviour
         if (setGamePause)
         {
             gameRunning = false;
+            pauseCanvas.SetActive(true);
         }
         else // else if setGamePause is false unpause the game
         {
             gameRunning = true;
+            pauseCanvas.SetActive(false);
         }
     }
 

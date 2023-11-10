@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Dog : MonoBehaviour
 {
+    public AudioSource dogBark;
+    /*public AudioSource dogWhine*/
+    //public ForestFire3D forestFire3D;
     // Start is called before the first frame update
     void Start()
     {
@@ -14,5 +17,9 @@ public class Dog : MonoBehaviour
     void Update()
     {
         
+    }
+   public void Bark()
+    {
+        dogBark.Play();
     }
 }
