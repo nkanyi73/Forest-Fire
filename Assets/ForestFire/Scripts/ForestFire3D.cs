@@ -77,11 +77,15 @@ public class ForestFire3D : MonoBehaviour
         {
             gameRunning = false;
             pauseCanvas.SetActive(true);
+            GameTimer.isPaused = true;
+            dogInstance.StopBarking();
         }
         else // else if setGamePause is false unpause the game
         {
             gameRunning = true;
             pauseCanvas.SetActive(false);
+            GameTimer.isPaused = false;
+            dogInstance.Bark();
         }
     }
 

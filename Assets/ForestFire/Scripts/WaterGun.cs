@@ -31,10 +31,6 @@ public class WaterGun : MonoBehaviour
     }
     private void StartShooting()
     {
-        //if (waterJet.isPlaying == false)
-        //{
-
-        //}
         waterJet.Play();
 
     }
@@ -43,7 +39,6 @@ public class WaterGun : MonoBehaviour
     { 
         if (waterJet.isPlaying == true)
         {
-            //Debug.Log("Stopping Water");
             waterJet.Stop();
         }
     }

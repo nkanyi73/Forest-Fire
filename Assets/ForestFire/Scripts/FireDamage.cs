@@ -18,7 +18,7 @@ public class FireDamage : MonoBehaviour
 
     IEnumerator SwitchScene()
     {
-        Debug.Log("Switching..");
+        
         yield return new WaitForSeconds(1);
 
         SceneManager.LoadScene("GameOver");
