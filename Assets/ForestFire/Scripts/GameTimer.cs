@@ -18,7 +18,7 @@ public class GameTimer : MonoBehaviour
     {
         // Initialize the countdown timer
         countdownTimer = 100f;
-        Debug.Log(countdownTimer);
+   
     }
 
     // Update is called once per frame
@@ -28,7 +28,6 @@ public class GameTimer : MonoBehaviour
         {
             if (!timerCanvas.gameObject.activeSelf)
             {
-                Debug.Log("Activating Canvas");
                 timerCanvas.SetActive(true);
                 timerText2.enabled = false;
             }
