@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
+using Unity.XR.OpenVR;
+using UnityEngine.XR;
+using JetBrains.Annotations;
 
 // class that controls the forest fire cellular automaton
 public class ForestFire3D : MonoBehaviour
@@ -12,17 +16,36 @@ public class ForestFire3D : MonoBehaviour
     public int gridSizeY; // y size of the grid
     public int nlight; // the number of trees to set alight at the start of the game
     public int xC, yC; // used for picking random x, y points
+    public int dogX, dogY; // x and y coordinates of the dog
 
     public int rockChance; // the percentage chance a cell is assigned as rock
     public int grassChance; // the percentage chance a cell is assigned as grass
 
-    public GameObject cellPrefab; // gameobject prefab used to represent a cell on the grid   
+    public GameObject cellPrefab; // gameobject prefab used to represent a cell on the grid
+
+    
 
     public ForestFireCell[,] forestFireCells = new ForestFireCell[0, 0]; // array of ForestFireCell objects
-    public ForestFireCell.State[,] forestFireCellsNextGenStates = new ForestFireCell.State[0,0]; // array of cell states to be used in the next generation of the game 
+    public ForestFireCell.State[,] forestFireCellsNextGenStates = new ForestFireCell.State[0, 0]; // array of cell states to be used in the next generation of the game 
 
     public GameObject[,] cellGameObjects = new GameObject[0, 0]; // an array to hold references to each gameobject that make up grid
     public bool gameRunning = false; // bool controlling whether the game is currently running
+
+    /*
+     * Declaration of my variables
+     */
+    public int closestXtoDog, closestYtoDog; // used to get the closest cell to the dog
+    public int closestXtoPlayer, closestYtoPlayer; // used to get the closest cell to the player
+    public Transform nozzle;
+    public Dog dogPrefab; // initialize Dog game object
+    private Dog dogInstance;
+
+    public GameObject pauseCanvas;
+    public InputActionReference pauseGame;
+    int levelValue = MainMenu.difficultyLevel;
+    /*
+     
+     */
 
     [Range(0.01f, 3f)]
     public float updateRate; // used to define how often will the game update (in seconds)
@@ -52,11 +75,17 @@ public class ForestFire3D : MonoBehaviour
         // if setGamePause is true the game should stop running
         if (setGamePause)
         {
-            gameRunning = false;           
+            gameRunning = false;
+            pauseCanvas.SetActive(true);
+            GameTimer.isPaused = true;
+            dogInstance.StopBarking();
         }
         else // else if setGamePause is false unpause the game
         {
-            gameRunning = true;          
+            gameRunning = true;
+            pauseCanvas.SetActive(false);
+            GameTimer.isPaused = false;
+            dogInstance.Bark();
         }
     }
 
@@ -64,16 +93,17 @@ public class ForestFire3D : MonoBehaviour
     private void Update()
     {
         // check if the spacebar key has been pressed. this key will toggle between whether the game is currently running or paused
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        if (pauseGame.action.WasPressedThisFrame())
         {
             // if the gameRunning is true, pause the game
             if (gameRunning)
             {
-                PauseGame(true);            
+                PauseGame(true);
             }
             else // if the gameRunning is false, unpause the game
             {
                 PauseGame(false);
+                dogInstance.Bark();
             }
         }
 
@@ -85,6 +115,9 @@ public class ForestFire3D : MonoBehaviour
 
         // update the visual state of each cell
         UpdateGridVisuals();
+
+        // Check if shooting has been pressed
+
 
         // if the game is not running, return here to prevent the rest of the code in this Update function from running    
         if (gameRunning == false)
@@ -99,12 +132,25 @@ public class ForestFire3D : MonoBehaviour
             UpdateCells();
             _gameTimer = 0f;
         }
+        FindClosestCellToDog();
+        FindClosestCellToPlayer();
+        
+        
+
+
     }
 
     private void RandomiseGrid()
     {
-        nlight = 2; // how many trees to set on fire
-                      // iterate through every cell in the cell in the grid and set its state to dead, decide what type of object is present and if flammable assign an amount of fuel
+        if (levelValue == 1)
+        {
+            nlight = 4; // how many trees to set on fire
+        } else
+        {
+            nlight = 2;
+        }
+        
+         // iterate through every cell in the cell in the grid and set its state to dead, decide what type of object is present and if flammable assign an amount of fuel
 
         for (int xCount = 0; xCount < gridSizeX; xCount++)
         {
@@ -113,7 +159,7 @@ public class ForestFire3D : MonoBehaviour
                 xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
 
                 if (xC < rockChance) // if the random value is less than rock chance, assign cell as rock
-                {                   
+                {
                     forestFireCells[xCount, yCount].SetRock();
                 }
                 else if (xC < grassChance) // if the random value is less than grass chance, assign cell as grass and set cell fuel
@@ -144,6 +190,15 @@ public class ForestFire3D : MonoBehaviour
 
         // set the middle cell as grass which is where the player is placed
         forestFireCells[20, 20].SetGrass();
+
+        dogX = UnityEngine.Random.Range(0, gridSizeX);
+        dogY = UnityEngine.Random.Range(0, gridSizeY);
+        forestFireCells[dogX, dogY].SetGrass();
+        dogInstance = Instantiate(dogPrefab, null);
+
+        dogInstance.transform.position = cellGameObjects[dogX, dogY].transform.position;
+
+
     }
 
 
@@ -160,7 +215,7 @@ public class ForestFire3D : MonoBehaviour
 
                 if (forestFireCells[xCount, yCount].cellState == ForestFireCell.State.Alight) // if the cell is currently alight let it burn but reduce it's fuel and see if it goes out
                 {
-                     forestFireCells[xCount, yCount].cellFuel--; // reduce fuel by 1 (-- operator reduces an integer by 1)
+                    forestFireCells[xCount, yCount].cellFuel--; // reduce fuel by 1 (-- operator reduces an integer by 1)
 
 
                     if (forestFireCells[xCount, yCount].cellFuel <= 0) // has it burned all its fuel?
@@ -181,7 +236,7 @@ public class ForestFire3D : MonoBehaviour
                         xC = UnityEngine.Random.Range(0, 100); // generate a random number between 0 and 100
 
                         if (xC < 10 * alightNeighbourCells) // the more alight neighbours the greater the probability of catching light
-                                                                      // e.g. 1 alight neighbour = 10 * 1 = 10% chance of catching fire, 2 alight neighbours = 10 * 2 = 20% chance of catching fire, etc.
+                                                            // e.g. 1 alight neighbour = 10 * 1 = 10% chance of catching fire, 2 alight neighbours = 10 * 2 = 20% chance of catching fire, etc.
                         {
                             forestFireCellsNextGenStates[xCount, yCount] = ForestFireCell.State.Alight;  // a 10% chance of catching fire
                         }
@@ -292,9 +347,9 @@ public class ForestFire3D : MonoBehaviour
                 // add to array
                 ForestFireCell forestFireCell = newCell.GetComponent<ForestFireCell>();
                 forestFireCells[xCount, yCount] = forestFireCell;
-                
-                 // add reference to camera
-                forestFireCell.playerCamera = gameCamera.gameObject;                
+
+                // add reference to camera
+                forestFireCell.playerCamera = gameCamera.gameObject;
 
                 ySpacing += 3;
             }
@@ -337,4 +392,51 @@ public class ForestFire3D : MonoBehaviour
             }
         }
     }
+
+
+
+    private void FindClosestCellToDog()
+    {
+
+        float distance = 1000f;
+
+
+        for (int xCount = 0; xCount < gridSizeX; xCount++)
+        {
+            for (int yCount = 0; yCount < gridSizeY; yCount++)
+            {
+
+                if (Vector3.Distance(dogInstance.transform.position, cellGameObjects[xCount, yCount].transform.position) < distance)
+                {
+                    closestXtoDog = xCount;
+                    closestYtoDog = yCount;
+                    distance = Vector3.Distance(dogInstance.transform.position, cellGameObjects[xCount, yCount].transform.position);
+                }
+            }
+
+        }
+    }
+
+    private void FindClosestCellToPlayer()
+    {
+        float distance = 1000f;
+
+
+        for (int xCount = 0; xCount < gridSizeX; xCount++)
+        {
+            for (int yCount = 0; yCount < gridSizeY; yCount++)
+            {
+
+                if (Vector3.Distance(nozzle.transform.position, cellGameObjects[xCount, yCount].transform.position) < distance)
+                {
+                    closestXtoPlayer = xCount;
+                    closestYtoPlayer = yCount;
+                    distance = Vector3.Distance(nozzle.transform.position, cellGameObjects[xCount, yCount].transform.position);
+                }
+            }
+
+        }
+    }
+
+
 }

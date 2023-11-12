@@ -10,9 +10,11 @@ public class MiniMap : MonoBehaviour
     public ForestFire3D forestFire3D; // reference to the main forest fire 3D script
 
     public GameObject cellSprite; // sprite used to represent a cell on the grid
+    public Sprite dogSprite;
 
     public Transform spawnPosition; // initial spawn position
     public SpriteRenderer[,] cellSpriteRenderers = new SpriteRenderer[0, 0]; // an array to hold references to the sprite renderer component attached to each gameobject
+    // public Sprite dogIcon;
 
 
     // Start is a built-in Unity function that is called before the first frame update
@@ -77,9 +79,20 @@ public class MiniMap : MonoBehaviour
                 }
                 else // something has gone wrong, display an error message
                 {
-                    Debug.LogError("objectArray is not 0, 1 or 2, check code for errors");
+                    continue;
+                    //Debug.Log(forestFire3D.closestXtoPlayer + ":" + forestFire3D.closestYtoPlayer);
+                    //cellSpriteRenderers[forestFire3D.closestXtoDog, forestFire3D.closestYtoDog].color = Color.white;
+                    //Debug.LogError("objectArray is not 0, 1 or 2, check code for errors");
                 }
             }
         }
+
+
+        cellSpriteRenderers[forestFire3D.closestXtoDog, forestFire3D.closestYtoDog].sprite = dogSprite;
+        cellSpriteRenderers[forestFire3D.closestXtoPlayer, forestFire3D.closestYtoPlayer].color = Color.blue;
+
+
+
+
     }
 }

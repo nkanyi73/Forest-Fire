@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ignite
+  - Water
+  - Cell
+  - Dog
+  - Game Over
   layers:
   - Default
   - TransparentFX
@@ -12,13 +16,13 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Cell
   - 
   - Grabbable
   - Hands
   - Teleporter
   - NoHandCollide
-  - 
+  - Fire
   - 
   - 
   - 
@@ -41,4 +45,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Minimap
+    uniqueID: 4050316521
     locked: 0
