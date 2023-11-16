@@ -6,20 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class GameTimer : MonoBehaviour
 {
-    public TMP_Text timerText;
-    public TMP_Text timerText2;
-    private float countdownTimer;
-    public static bool isPaused;
-    public GameObject timerCanvas;
+    public TMP_Text timerText; // reference to the timer's text
+    public TMP_Text timerText2; // reference to the message that displays on winning
+    private float countdownTimer; // timer
+    public static bool isPaused; // variable that holds the game state
+    public GameObject timerCanvas; // reference to the timer canvas
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Initialize the countdown timer
-        countdownTimer = 100f;
-   
-    }
 
     // Update is called once per frame
     void Update()
@@ -45,6 +38,7 @@ public class GameTimer : MonoBehaviour
                 StartSwitchSceneRoutine();
             }
         }
+        // hide timer canvas only when it is active and the game is not paused
         if (timerCanvas.gameObject.activeSelf && isPaused)
         {
             timerCanvas.SetActive(false);
@@ -63,6 +57,7 @@ public class GameTimer : MonoBehaviour
         timerText.text = string.Format("Help arriving in: {0:00}:{1:00}", minutes, seconds);
     }
 
+    // coroutine to delay redirect to game over menu
     IEnumerator SwitchScene()
     {
         yield return new WaitForSeconds(2);
@@ -70,6 +65,7 @@ public class GameTimer : MonoBehaviour
         SceneManager.LoadScene("GameOver");
     }
 
+    // method that starts the coroutine
     void StartSwitchSceneRoutine()
     {
         StartCoroutine(SwitchScene());  

@@ -87,7 +87,7 @@ public class MiniMap : MonoBehaviour
             }
         }
 
-
+        // update the minimap to the dog's location and the player's location as the game goes on
         cellSpriteRenderers[forestFire3D.closestXtoDog, forestFire3D.closestYtoDog].sprite = dogSprite;
         cellSpriteRenderers[forestFire3D.closestXtoPlayer, forestFire3D.closestYtoPlayer].color = Color.blue;
 
