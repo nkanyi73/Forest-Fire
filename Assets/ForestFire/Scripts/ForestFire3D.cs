@@ -36,13 +36,13 @@ public class ForestFire3D : MonoBehaviour
      */
     public int closestXtoDog, closestYtoDog; // used to get the closest cell to the dog
     public int closestXtoPlayer, closestYtoPlayer; // used to get the closest cell to the player
-    public Transform nozzle;
-    public Dog dogPrefab; // initialize Dog game object
-    private Dog dogInstance;
+    public Transform nozzle; // a tiny object that keeps track of the player's position
+    public Dog dogPrefab; // reference to dog prefab to instantiate it on scene
+    private Dog dogInstance; // Dog game object
 
-    public GameObject pauseCanvas;
-    public InputActionReference pauseGame;
-    int levelValue = MainMenu.difficultyLevel;
+    public GameObject pauseCanvas; // canvas that holds the pause menu
+    public InputActionReference pauseGame; // control that pauses the game
+    int levelValue = MainMenu.difficultyLevel; // reference from a static variable in MainMenu script
     /*
      
      */
@@ -72,7 +72,13 @@ public class ForestFire3D : MonoBehaviour
     // this function controls whether or not to pause the game
     private void PauseGame(bool setGamePause)
     {
-        // if setGamePause is true the game should stop running
+        /*
+         * if game setGamePause is true
+         * - display the pause canvas
+         * - pause the timer
+         * - stop the dog's barking
+         */
+
         if (setGamePause)
         {
             gameRunning = false;
@@ -80,7 +86,14 @@ public class ForestFire3D : MonoBehaviour
             GameTimer.isPaused = true;
             dogInstance.StopBarking();
         }
-        else // else if setGamePause is false unpause the game
+        /*
+         * else if setGamePause is false
+         * - set gameRunning to true
+         * - hide the pause canvas
+         * - hide the resume the game timer
+         * - resume the dog's barking
+         */
+        else 
         {
             gameRunning = true;
             pauseCanvas.SetActive(false);
@@ -92,7 +105,7 @@ public class ForestFire3D : MonoBehaviour
     // Update is a built-in Unity function that is called once per frame 
     private void Update()
     {
-        // check if the spacebar key has been pressed. this key will toggle between whether the game is currently running or paused
+        // check if the Y key on controller has been pressed. this key will toggle between whether the game is currently running or paused
         if (pauseGame.action.WasPressedThisFrame())
         {
             // if the gameRunning is true, pause the game
@@ -132,6 +145,7 @@ public class ForestFire3D : MonoBehaviour
             UpdateCells();
             _gameTimer = 0f;
         }
+        // run the two functions to find the closest cell to the player and the dog, in order to update their location on the minimap
         FindClosestCellToDog();
         FindClosestCellToPlayer();
         
@@ -142,6 +156,7 @@ public class ForestFire3D : MonoBehaviour
 
     private void RandomiseGrid()
     {
+        // set the difficulty level by altering the number of cells that are initially alight
         if (levelValue == 1)
         {
             nlight = 4; // how many trees to set on fire
@@ -191,8 +206,11 @@ public class ForestFire3D : MonoBehaviour
         // set the middle cell as grass which is where the player is placed
         forestFireCells[20, 20].SetGrass();
 
+        // get a random x and y value and instantiate the dog's position
         dogX = UnityEngine.Random.Range(0, gridSizeX);
         dogY = UnityEngine.Random.Range(0, gridSizeY);
+
+        // make sure the dog's location always has grass
         forestFireCells[dogX, dogY].SetGrass();
         dogInstance = Instantiate(dogPrefab, null);
 
@@ -394,10 +412,10 @@ public class ForestFire3D : MonoBehaviour
     }
 
 
-
+// function that finds the closest cell to the dog
     private void FindClosestCellToDog()
     {
-
+        // start with a very high distance value
         float distance = 1000f;
 
 
@@ -405,7 +423,7 @@ public class ForestFire3D : MonoBehaviour
         {
             for (int yCount = 0; yCount < gridSizeY; yCount++)
             {
-
+                // reduce the distance value as the loop goes on, the least distance is the closest cell to the dog
                 if (Vector3.Distance(dogInstance.transform.position, cellGameObjects[xCount, yCount].transform.position) < distance)
                 {
                     closestXtoDog = xCount;
@@ -417,6 +435,7 @@ public class ForestFire3D : MonoBehaviour
         }
     }
 
+    // // function that finds the closest cell to the player
     private void FindClosestCellToPlayer()
     {
         float distance = 1000f;

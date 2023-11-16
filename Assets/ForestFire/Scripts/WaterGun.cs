@@ -5,23 +5,19 @@ using UnityEngine.InputSystem;
 
 public class WaterGun : MonoBehaviour
 {
-    //public Transform nozzle;
-    public InputActionReference shootAction;
-    public ParticleSystem waterJet;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public InputActionReference shootAction; // reference to the shoot control
+    public ParticleSystem waterJet; // reference to the particle system that represents water particles
 
     // Update is called once per frame
     void Update()
     {
+        // start shooting as long as shoot action is pressed
         if (shootAction.action.IsPressed())
         {
             //Debug.Log("Button Press Detected");
             StartShooting();
         }
+        // else stop shooting
         else
         {
             StopShooting();
@@ -35,6 +31,7 @@ public class WaterGun : MonoBehaviour
 
     }
 
+    // only stop the partcle system's playing when it has been detected that it is playing
     private void StopShooting() 
     { 
         if (waterJet.isPlaying == true)
